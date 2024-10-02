@@ -178,7 +178,7 @@ export default function ClientLineSheet() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="flex-grow"
         />
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+        <Select onValueChange={setCategoryFilter} value={categoryFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Filter by category" />
           </SelectTrigger>
@@ -189,7 +189,7 @@ export default function ClientLineSheet() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <Select onValueChange={setStatusFilter} value={statusFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
@@ -200,7 +200,7 @@ export default function ClientLineSheet() {
             ))}
           </SelectContent>
         </Select>
-        <Select value={viewMode} onValueChange={(value: 'grid' | 'table') => setViewMode(value)}>
+        <Select onValueChange={(value: 'grid' | 'table') => setViewMode(value)} value={viewMode}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Select view" />
           </SelectTrigger>
