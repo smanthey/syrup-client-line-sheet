@@ -25,6 +25,10 @@ type ClientLineSheetItem = {
   imageUrl: string
 }
 
+type RawClientLineSheetItem = {
+  [K in keyof ClientLineSheetItem]: string
+}
+
 export default function ClientLineSheet() {
   const [items, setItems] = useState<ClientLineSheetItem[]>([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -38,7 +42,7 @@ export default function ClientLineSheet() {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (file) {
-      Papa.parse<ClientLineSheetItem>(file, {
+      Papa.parse<RawClientLineSheetItem>(file, {
         complete: (result) => {
           if (result.errors.length > 0) {
             setError("Error parsing CSV file. Please check the file format.")
@@ -47,8 +51,8 @@ export default function ClientLineSheet() {
           const parsedData = result.data.map((row, index) => ({
             id: index + 1,
             name: row.name || '',
-            balance: parseFloat(row.balance as string) || 0,
-            minOrderQuantity: parseInt(row.minOrderQuantity as string) || 0,
+            balance: parseFloat(row.balance) || 0,
+            minOrderQuantity: parseInt(row.minOrderQuantity) || 0,
             sampleLeadTime: row.sampleLeadTime || '',
             bulkLeadTime: row.bulkLeadTime || '',
             status: row.status || '',
