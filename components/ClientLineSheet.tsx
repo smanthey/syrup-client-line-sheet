@@ -12,8 +12,28 @@ interface LineSheetItem {
   imageUrl: string
 }
 
+// Inline tester data
+const testerData: LineSheetItem[] = [
+  {
+    id: 1,
+    name: "Test T-Shirt",
+    category: "Tops",
+    status: "In Stock",
+    price: 19.99,
+    imageUrl: "/placeholder.svg?height=300&width=300"
+  },
+  {
+    id: 2,
+    name: "Test Jeans",
+    category: "Bottoms",
+    status: "Low Stock",
+    price: 49.99,
+    imageUrl: "/placeholder.svg?height=300&width=300"
+  }
+]
+
 export default function ClientLineSheet() {
-  const [items, setItems] = useState<LineSheetItem[]>([])
+  const [items, setItems] = useState<LineSheetItem[]>(testerData)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [cartItems, setCartItems] = useState<LineSheetItem[]>([])
@@ -21,15 +41,29 @@ export default function ClientLineSheet() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log('Fetching data...')
         const response = await fetch('/api/lineSheetData')
+        console.log('Response status:', response.status)
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch data')
+          throw new Error(`HTTP error! status: ${response.status}`)
         }
+        
         const data = await response.json()
-        setItems(data)
-        setLoading(false)
+        console.log('Fetched data:', data)
+        
+        if (Array.isArray(data) && data.length > 0) {
+          setItems(prevItems => {
+            console.log('Updating items:', [...prevItems, ...data])
+            return [...prevItems, ...data]
+          })
+        } else {
+          console.warn('Fetched data is empty or not an array')
+        }
       } catch (err) {
-        setError('Failed to load line sheet data')
+        console.error('Error fetching data:', err)
+        setError(`Failed to load additional line sheet data: ${err.message}`)
+      } finally {
         setLoading(false)
       }
     }
@@ -38,24 +72,32 @@ export default function ClientLineSheet() {
   }, [])
 
   const addToCart = (item: LineSheetItem) => {
-    if (!cartItems.some(cartItem => cartItem.id === item.id)) {
-      setCartItems(prev => [...prev, item])
-    }
+    console.log('Adding to cart:', item)
+    setCartItems(prev => {
+      const newCart = prev.some(cartItem => cartItem.id === item.id) ? prev : [...prev, item]
+      console.log('Updated cart:', newCart)
+      return newCart
+    })
   }
 
   const removeFromCart = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id))
+    console.log('Removing from cart, id:', id)
+    setCartItems(prev => {
+      const newCart = prev.filter(item => item.id !== id)
+      console.log('Updated cart:', newCart)
+      return newCart
+    })
   }
 
   const clearCart = () => {
+    console.log('Clearing cart')
     setCartItems([])
   }
 
-  if (loading) return <div className="text-center py-4">Loading...</div>
-  if (error) return <div className="text-center py-4 text-red-500">{error}</div>
+  console.log('Rendering ClientLineSheet. Items:', items, 'Cart:', cartItems)
 
   return (
-    <div>
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Clothing Line Sheet</h1>
       {items.length === 0 ? (
         <p className="text-center">No items available.</p>
@@ -80,6 +122,8 @@ export default function ClientLineSheet() {
           ))}
         </div>
       )}
+      {loading && <p className="text-center">Loading additional items...</p>}
+      {error && <p className="text-center text-red-500">{error}</p>}
       <ShoppingCart items={cartItems} removeFromCart={removeFromCart} clearCart={clearCart} />
     </div>
   )
