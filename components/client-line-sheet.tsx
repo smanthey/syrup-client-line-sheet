@@ -178,9 +178,9 @@ export default function ClientLineSheet() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="flex-grow"
         />
-        <Select defaultValue={categoryFilter} onValueChange={setCategoryFilter}>
+        <Select onValueChange={setCategoryFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Filter by category" />
+            <SelectValue placeholder="Filter by category">{categoryFilter}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="All">All Categories</SelectItem>
@@ -189,9 +189,9 @@ export default function ClientLineSheet() {
             ))}
           </SelectContent>
         </Select>
-        <Select defaultValue={statusFilter} onValueChange={setStatusFilter}>
+        <Select onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Filter by status" />
+            <SelectValue placeholder="Filter by status">{statusFilter}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="All">All Statuses</SelectItem>
@@ -200,9 +200,9 @@ export default function ClientLineSheet() {
             ))}
           </SelectContent>
         </Select>
-        <Select defaultValue={viewMode} onValueChange={(value: 'grid' | 'table') => setViewMode(value)}>
+        <Select onValueChange={(value: 'grid' | 'table') => setViewMode(value)}>
           <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Select view" />
+            <SelectValue placeholder="Select view">{viewMode}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="grid">Grid View</SelectItem>
